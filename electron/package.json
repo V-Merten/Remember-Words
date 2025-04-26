@@ -1,0 +1,24 @@
+{
+  "name": "remember-words",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^35.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "productName": "RememberWords",
+    "appId": "com.example.rememberwords",
+    "asar": true,
+    "asarUnpack": ["**/*.jar"],
+    "files": ["build/**/*", "main.js"],
+    "extraResources": 
+    [{ "from": "java", "to": "java" }, 
+    {"from": "db", "to": "db"}],
+    "directories": { "output": "dist" }
+  }
+}

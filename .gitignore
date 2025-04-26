@@ -1,0 +1,16 @@
+# Node modules
+**/node_modules/
+# Java build
+**/target/
+# IDE settings
+.idea/
+# OS generated files
+.DS_Store
+# Logs
+logs/
+**/*.log
+# Output folders
+dist/
+build/
+# JARs
+*.jar
