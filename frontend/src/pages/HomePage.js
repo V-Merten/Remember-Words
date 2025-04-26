@@ -266,8 +266,20 @@ const HomePage = () => {
         </tbody>
       </table>
 
-      <div className="delete-button">
+      <div className="actions-container">
         <button onClick={handleDeleteSelected}>Delete</button>
+        <button onClick={handleUpdateSelected}>Update</button>
+        <select
+          value={selectedGroupId}
+          onChange={(e) => setSelectedGroupId(e.target.value)}
+        >
+          <option value="">Select group</option>
+          {groups.map((group) => (
+            <option key={group.id} value={group.id}>
+              {group.name}
+            </option>
+          ))}
+        </select>
       </div>
       
       {editingWord && (
@@ -310,9 +322,6 @@ const HomePage = () => {
           </button>
         </div>
       )}
-      <div className="update-button"> 
-        <button onClick={handleUpdateSelected}>Update</button>
-      </div>
 
       {groups.length > 0 && (
         <div className="add-to-group-button">

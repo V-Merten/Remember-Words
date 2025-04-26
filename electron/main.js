@@ -3,6 +3,7 @@ const path = require('path');
 const { spawn, execFile, exec } = require('child_process');
 const http = require('http');
 const fs = require('fs');
+const { autoUpdater } = require('electron-updater');
 
 const logFile = path.join(app.getPath('userData'), 'debug.log');
 
@@ -11,6 +12,26 @@ const _error = console.error;
 
 const dbPath = path.join(app.getPath('userData'), 'db', 'remember-words-db');
 const dbDir = path.dirname(dbPath);
+
+autoUpdater.on('update-available', () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update available',
+    message: 'A new version is available. Downloading now...'
+  });
+});
+
+autoUpdater.on('update-downloaded', () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update ready',
+    message: 'Install and restart now?',
+    buttons: ['Yes', 'Later']
+  }).then(result => {
+    if (result.response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
@@ -124,6 +145,7 @@ app.whenReady().then(() => {
     .then(() => {
       console.log('[INFO] Server ready, launching UI');
       createWindow();
+      autoUpdater.checkForUpdatesAndNotify();
     })
     .catch((err) => {
       // Read accumulated log

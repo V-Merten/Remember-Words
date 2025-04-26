@@ -1,7 +1,9 @@
-export default {
-    server: {
-      proxy: {
-        '/api': 'http://localhost:8080'
-      }
-    }
-  }
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  root: './',
+  build: {
+    outDir: '../electron/build',
+    emptyOutDir: true,
+  },
+});
