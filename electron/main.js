@@ -13,7 +13,44 @@ const _error = console.error;
 const dbPath = path.join(app.getPath('userData'), 'db', 'remember-words-db');
 const dbDir = path.dirname(dbPath);
 
+function createWindow() {
+  console.log('[INFO] Creating browser window');
+  mainWindow = new BrowserWindow({ width: 1000, height: 800, show: false, webPreferences: { contextIsolation: true } });
+  mainWindow.loadURL('http://localhost:8080');
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+  mainWindow.on('closed', () => mainWindow = null);
+}
+
+app.whenReady().then(() => {
+  console.log('[INFO] User data path:', app.getPath('userData'));
+  startSpringBoot();
+  waitForServerReady('http://localhost:8080')
+    .then(() => {
+      console.log('[INFO] Server ready, launching UI');
+      createWindow();
+      autoUpdater.checkForUpdatesAndNotify();
+    })
+    .catch((err) => {
+      // Read accumulated log
+      let logs = '';
+      try {
+        logs = fs.readFileSync(logFile, 'utf-8');
+      } catch (e) {
+        logs = `Unable to read log: ${e.message}`;
+      }
+      // Show error dialog with reason and logs
+      dialog.showErrorBox(
+        'Application Launch Error',
+        `Reason: ${err.message}\n\nLogs:\n${logs}`
+      );
+      app.quit();
+    });
+});
+
 autoUpdater.on('update-available', () => {
+  console.log('[Updater] Update available');
   dialog.showMessageBox({
     type: 'info',
     title: 'Update available',
@@ -22,6 +59,7 @@ autoUpdater.on('update-available', () => {
 });
 
 autoUpdater.on('update-downloaded', () => {
+  console.log('[Updater] Update downloaded');
   dialog.showMessageBox({
     type: 'info',
     title: 'Update ready',
@@ -30,6 +68,22 @@ autoUpdater.on('update-downloaded', () => {
   }).then(result => {
     if (result.response === 0) autoUpdater.quitAndInstall();
   });
+});
+
+autoUpdater.on('checking-for-update', () => {
+  console.log('[Updater] Checking for update...');
+});
+
+autoUpdater.on('update-not-available', () => {
+  console.log('[Updater] Update not available');
+});
+
+autoUpdater.on('error', (err) => {
+  console.error('[Updater] Error during update:', err);
+});
+
+autoUpdater.on('download-progress', (progress) => {
+  console.log(`[Updater] Download progress: ${progress.percent.toFixed(2)}%`);
 });
 
 if (!fs.existsSync(dbDir)) {
@@ -60,14 +114,6 @@ if (isDev) {
   }
 }
 
-const child = spawn('java', ['-jar', jarPath], {
-  env: {
-    ...process.env,
-    JDBC_DATABASE_URL: dbUrl,
-  },
-  stdio: 'pipe',
-});
-
 console.log = (...args) => {
   _log(...args);
   try {
@@ -93,17 +139,23 @@ function startSpringBoot() {
   const javaCmd = process.env.JAVA_HOME
     ? path.join(process.env.JAVA_HOME, 'bin', 'java')
     : '/usr/bin/java';
-  const jarCommand = `"${javaCmd}" -jar "${jarPath}"`;
-  springBootProcess = exec(jarCommand, {
+  springBootProcess = spawn(javaCmd, ['-jar', jarPath], {
     env: {
       ...process.env,
-      PATH: `${process.env.PATH}:/usr/local/bin:/opt/homebrew/bin`
-    }
+      PATH: `${process.env.PATH}:/usr/local/bin:/opt/homebrew/bin`,
+      JDBC_DATABASE_URL: dbUrl
+    },
+    stdio: 'pipe'
   });
   springBootProcess.stdout?.on('data', data => console.log(`[SpringBoot]: ${data}`));
   springBootProcess.stderr?.on('data', data => {
     console.error(`[SpringBoot ERROR]: ${data}`);
-    const logPath = path.join(app.getPath('userData'), 'boot-error.log');
+    try {
+      const logPath = path.join(app.getPath('userData'), 'boot-error.log');
+      fs.appendFileSync(logPath, data.toString() + '\n');
+    } catch (e) {
+      console.error('[LOG WRITE ERROR]', e.message);
+    }
   });
   springBootProcess.on('error', err => console.error(`[SpringBoot Spawn ERROR]: ${err.message}`));
 }
@@ -130,40 +182,6 @@ function waitForServerReady(url, timeout = 30000) {
     check();
   });
 }
-
-function createWindow() {
-  console.log('[INFO] Creating browser window');
-  mainWindow = new BrowserWindow({ width: 1000, height: 800, webPreferences: { contextIsolation: true } });
-  mainWindow.loadURL('http://localhost:8080');
-  mainWindow.on('closed', () => mainWindow = null);
-}
-
-app.whenReady().then(() => {
-  console.log('[INFO] User data path:', app.getPath('userData'));
-  startSpringBoot();
-  waitForServerReady('http://localhost:8080')
-    .then(() => {
-      console.log('[INFO] Server ready, launching UI');
-      createWindow();
-      autoUpdater.checkForUpdatesAndNotify();
-    })
-    .catch((err) => {
-      // Read accumulated log
-      let logs = '';
-      try {
-        logs = fs.readFileSync(logFile, 'utf-8');
-      } catch (e) {
-        logs = `Unable to read log: ${e.message}`;
-      }
-      // Show error dialog with reason and logs
-      dialog.showErrorBox(
-        'Application Launch Error',
-        `Reason: ${err.message}\n\nLogs:\n${logs}`
-      );
-      app.quit();
-    });
-});
-
 
 app.on('window-all-closed', () => {
   if (springBootProcess) springBootProcess.kill();

@@ -16,3 +16,5 @@ build/
 *.jar
 # ENV
 **/*.env
+# test
+**/mock-update-server
