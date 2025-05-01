@@ -1,12 +1,13 @@
 {
   "name": "remember-words",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "main": "main.js",
+  "description": "An application to remember and practice foreign words",
   "scripts": {
     "start": "electron .",
     "build-frontend": "cd ../frontend && npm run build",
-    "copy-frontend": "rm -rf ./build && cp -r ../frontend/build ./build",
-    "dist": "source .env && npm run build-frontend && npm run copy-frontend && electron-builder --publish always"
+    "copy-frontend": "rm -rf ./build && cp -r ../frontend/dist ./build",
+    "dist": "npm run build-frontend && npm run copy-frontend && electron-builder --publish never"
   },
   "devDependencies": {
     "electron": "^35.2.0",
@@ -20,6 +21,9 @@
         "repo": "Remember-Words"
       }
     ],
+    "mac": {
+  "sign": false
+    },
     "productName": "RememberWords",
     "appId": "com.example.rememberwords",
     "asar": true,

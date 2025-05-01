@@ -15,6 +15,7 @@ const dbDir = path.dirname(dbPath);
 
 function createWindow() {
   console.log('[INFO] Creating browser window');
+  console.log(`[App] Current Electron App Version: ${app.getVersion()}`);
   mainWindow = new BrowserWindow({ width: 1000, height: 800, show: false, webPreferences: { contextIsolation: true } });
   mainWindow.loadURL('http://localhost:8080');
   mainWindow.once('ready-to-show', () => {
@@ -33,14 +34,12 @@ app.whenReady().then(() => {
       autoUpdater.checkForUpdatesAndNotify();
     })
     .catch((err) => {
-      // Read accumulated log
       let logs = '';
       try {
         logs = fs.readFileSync(logFile, 'utf-8');
       } catch (e) {
         logs = `Unable to read log: ${e.message}`;
       }
-      // Show error dialog with reason and logs
       dialog.showErrorBox(
         'Application Launch Error',
         `Reason: ${err.message}\n\nLogs:\n${logs}`

@@ -1,6 +1,11 @@
 .practice-container {
-    padding: 20px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10vh;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
   
   .word-title {
     font-size: 40px;
@@ -20,4 +25,18 @@
   
   .bottom-navigation {
     margin-top: 30px;
+  }
+  .feedback-details p {
+    margin: 4px 0;
+    list-style-type: none;
+    display: block;
+    padding-left: 0;
+    text-indent: 0;
+  }
+  .feedback-correct {
+    color: green;
+  }
+
+  .feedback-incorrect {
+    color: red;
   }
