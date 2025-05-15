@@ -16,7 +16,7 @@ const dbDir = path.dirname(dbPath);
 function createWindow() {
   console.log('[INFO] Creating browser window');
   console.log(`[App] Current Electron App Version: ${app.getVersion()}`);
-  mainWindow = new BrowserWindow({ width: 1000, height: 800, show: false, webPreferences: { contextIsolation: true } });
+  mainWindow = new BrowserWindow({ width: 1000, height: 700, show: false, webPreferences: { contextIsolation: true } });
   mainWindow.loadURL('http://localhost:8080');
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();

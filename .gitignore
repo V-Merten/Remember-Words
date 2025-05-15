@@ -1,0 +1,42 @@
+# Node.js
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Electron
+electron/node_modules/
+electron/dist/
+electron/de
+electron/java
+
+backend/.idea
+backend/db
+backend/target
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# VSCode / JetBrains
+.vscode/
+.idea/
+
+# Build output
+out/
+build/
+
+# OS temp
+*.swp
+*.swo
+*.tmp
+
+# Electron build output
+*.exe
+*.app
+*.dmg
+*.deb
+*.rpm
+*.snap
