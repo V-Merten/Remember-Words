@@ -25,3 +25,5 @@
 - npm
 - Java 17+
 - Maven
+
+Download Link - https://github.com/V-Merten/Remember-Words/releases
