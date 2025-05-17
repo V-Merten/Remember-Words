@@ -19,11 +19,6 @@
 - **Database:** H2 (in-memory / file-based)
 - **Build Tools:** Maven, npm, Electron Builder
 
-## Prerequisites
-
-- Node.js (v18+)
-- npm
-- Java 17+
-- Maven
+  
 
 Download Link - https://github.com/V-Merten/Remember-Words/releases
