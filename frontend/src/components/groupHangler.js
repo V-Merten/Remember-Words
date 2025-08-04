@@ -147,6 +147,10 @@ export const useGroups = () => {
         ...prev,
         [groupId]: updatedWords
       }));
+      setSelectedGroupWords(prev => ({
+        ...prev,
+        [groupId]: (prev[groupId] || []).filter(id => id !== wordId)
+      }));
     } catch (error) {
       console.error('Failed to remove word from group:', error);
     }

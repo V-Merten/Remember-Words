@@ -14,10 +14,10 @@ const dbPath = path.join(app.getPath('userData'), 'db', 'remember-words-db');
 const dbDir = path.dirname(dbPath);
 
 function createWindow() {
-  console.log('[INFO] Creating browser window');
-  console.log(`[App] Current Electron App Version: ${app.getVersion()}`);
   mainWindow = new BrowserWindow({ width: 1000, height: 700, show: false, webPreferences: { contextIsolation: true } });
-  mainWindow.loadURL('http://localhost:8080');
+  mainWindow.webContents.session.clearCache().then(() => {
+    mainWindow.loadURL('http://localhost:8080');
+  });
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
@@ -146,6 +146,7 @@ function startSpringBoot() {
     },
     stdio: 'pipe'
   });
+  console.log("Run JAR:", jarPath);
   springBootProcess.stdout?.on('data', data => console.log(`[SpringBoot]: ${data}`));
   springBootProcess.stderr?.on('data', data => {
     console.error(`[SpringBoot ERROR]: ${data}`);

@@ -30,52 +30,75 @@ const selectedIds = useMemo(() => location.state?.selectedIds || [], [location.s
 
   const checkAnswer = async () => {
     const word = words[currentIndex];
+    
     if (!word || !userAnswer.trim()) {
-      setFeedback({ correct: false, message: "Answer cannot be empty." });
+      setFeedback({
+        correct: false,
+        details: {
+          foreignWord: word?.foreignWord || '',
+          correctTranslation: word?.translatedWord || '',
+          userAnswer: ''
+        }
+      });
       return;
     }
+  
     try {
       const result = await checkPracticeAnswer({
         id: word.id,
         userWord: userAnswer
       });
-      console.log('Server result:', result);
-      
-      setFeedback(result);
-
+  
+      setFeedback({
+        correct: result.correct,
+        details: {
+          foreignWord: word.foreignWord,
+          correctTranslation: word.translatedWord,
+          userAnswer: userAnswer
+        }
+      });
+  
       setCurrentIndex((prevIndex) => {
         if (words.length <= 1) return prevIndex;
         let nextIndex;
         do {
           nextIndex = Math.floor(Math.random() * words.length);
         } while (nextIndex === prevIndex);
-      
         return nextIndex;
       });
+  
       setUserAnswer('');
     } catch (error) {
-      setFeedback({ correct: false, message: "Error checking answer." });
       console.error('Check answer failed:', error);
+      setFeedback({
+        correct: false,
+        details: {
+          foreignWord: word.foreignWord,
+          correctTranslation: word.translatedWord,
+          userAnswer: userAnswer
+        }
+      });
     }
   };
 
   return (
     <div className="practice-container">
-      <h1>Practice Page</h1>
       {words.length > 0 && (
-        <div>
+        <div className="foreign-word-block">
           <div className="word-title">
             {words[currentIndex]?.foreignWord.split('|').map((part, idx) => (
               <div key={idx}>{part.trim()}</div>
             ))}
           </div>
+        </div>
+      )}
+      {words.length > 0 && (
+        <div className="practice-content">
           <input
             type="text"
             placeholder="Enter translation"
             value={userAnswer}
-          onChange={(e) => {
-            setUserAnswer(e.target.value);
-          }}
+            onChange={(e) => setUserAnswer(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
@@ -85,31 +108,21 @@ const selectedIds = useMemo(() => location.state?.selectedIds || [], [location.s
             }}
             className="input-translation"
           />
-        <div>
-          <div className="input-button">
-            <button onClick={checkAnswer}>Check</button>
-          </div>
-          {feedback && (
-            <div className="feedback-details">
-              <p>
-                <strong>
-                  <span className={feedback.correct ? "feedback-correct" : "feedback-incorrect"}>
-                    {feedback.correct ? "Correct!" : "Incorrect!"}
-                  </span>
-                </strong>
-              </p>
-              {!feedback.correct && feedback.details && (
-                <>
-                  <p><strong>Foreign Word:</strong> {feedback.details.foreignWord}</p>
-                  <p><strong>Correct Translation:</strong> {feedback.details.correctTranslation}</p>
-                  <p><strong>Your Answer:</strong> {feedback.details.userAnswer}</p>
-                </>
-              )}
+  
+          <div>
+            <div className="input-button">
+              <button onClick={checkAnswer}>Check</button>
             </div>
-          )}
+            {feedback && feedback.details && (
+              <div className={`feedback-details ${feedback.correct ? 'feedback-correct' : 'feedback-incorrect'}`}>
+                <p><strong>{feedback.details.foreignWord} = {feedback.details.correctTranslation}</strong></p>
+                <p><strong>Your Answer: {feedback.details.userAnswer}</strong></p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
       )}
+  
       <div className="bottom-navigation">
         <Link to="/"><button>🏠 Home</button></Link>
       </div>

@@ -46,6 +46,7 @@ export const useWordsFunctions = (setWords, setForeignWord, setTranslation, setS
         setEditingWord(null);
         setEditValues({ foreignWord: '', translatedWord: '' });
       }
+
     } catch (error) {
       console.error('Failed to delete selected words:', error);
     }

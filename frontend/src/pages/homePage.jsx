@@ -33,7 +33,7 @@ const HomePage = () => {
     editingGroupName, setEditingGroupName,
     groupWordsMap,
     expandedGroups,
-    selectedGroupWords,
+    selectedGroupWords, setSelectedGroupWords,
     handleAddGroup,
     handleSelectGroup,
     handleRenameGroup,
@@ -49,7 +49,6 @@ const HomePage = () => {
     <div className="page-container">
       <div className="page-layout">
         <div className="word-section">
-          {/* Add Word */}
           <h2 className='section-title'>Add Word</h2>
           <form
             className="add-word-form"
@@ -135,8 +134,8 @@ const HomePage = () => {
             return (
               <div className="actions-container">
                 <button
-                  onClick={() =>
-                    handleDeleteSelected(
+                  onClick={async () => {
+                    await handleDeleteSelected(
                       combinedSelected,
                       setWords,
                       words,
@@ -144,8 +143,18 @@ const HomePage = () => {
                       setEditingWord,
                       setEditValues,
                       editingWord
-                    )
-                  }
+                    );
+                  
+                    setSelectedWords([]);
+                    setSelectedGroupWords({});
+                  
+                    for (const groupId of expandedGroups) {
+                      await fetchGroupWords(groupId);
+                    }
+                  
+                    const refreshed = await getAllWords();
+                    setWords(refreshed);
+                  }}
                   className="group-button"
                 >
                   Delete

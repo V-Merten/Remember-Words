@@ -6,10 +6,18 @@
   min-height: 100vh;
   box-sizing: border-box;
 }
+
+.practice-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
   
   .word-title {
-    font-size: 40px;
-    font-weight: bold;
+    height: 3em;
+    font-size: 5em;
+    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+    font-weight: 500;
     margin-bottom: 20px;
     text-align: center
   }
@@ -21,23 +29,28 @@
   }
   
   .input-button {
+    display: flex;
+    justify-content: center;
     margin-top: 10px;
   }
   
   .bottom-navigation {
+    align-items: center;
     margin-top: 30px;
   }
-  .feedback-details p {
-    margin: 4px 0;
-    list-style-type: none;
-    display: block;
-    padding-left: 0;
-    text-indent: 0;
+  .feedback-details {
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+    color: white;
   }
+  
   .feedback-correct {
-    color: green;
+    background-color: #5cb85c;
   }
-
+  
   .feedback-incorrect {
-    color: red;
+    background-color: #d9534f;
   }
