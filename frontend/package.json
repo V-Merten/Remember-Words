@@ -4,10 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
+    "build": "vite build && npm run copy-build",
+    "copy-build": "node ./scripts/copy-build.js"
+  },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.1.0",
