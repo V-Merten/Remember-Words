@@ -5,8 +5,6 @@
   "type": "module",
   "scripts": {
   "dev": "vite",
-  "build": "vite build && npm run copy-build",
-  "copy-build": "rm -rf ../backend/src/main/resources/static && cp -r dist ../backend/src/main/resources/static",
   "lint": "eslint .",
   "preview": "vite preview"
 },
