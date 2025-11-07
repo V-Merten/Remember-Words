@@ -4,14 +4,15 @@ export const getPracticeWords = async (ids) => {
     return await response.json();
   };
   
-export const checkPracticeAnswer = async ({ id, userWord }) => {
-    console.log('Sending practice answer:', { id, userWord });
+export const checkPracticeAnswer = async ({ id, userWord, direction }) => {
+    console.log('Sending practice answer:', { id, userWord, direction });
     const response = await fetch('/api/practice', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id,
-        userWord
+        userWord,
+        direction
       })
     });
     if (!response.ok) throw new Error('Error while checking words');

@@ -1,5 +1,6 @@
 package com.example.remember_words.service;
 
+import com.example.remember_words.dto.PracticeDirection;
 import com.example.remember_words.dto.PracticeRequest;
 import com.example.remember_words.entity.Words;
 import com.example.remember_words.repository.WordsRepository;
@@ -36,7 +37,13 @@ public class PracticeService {
         Map<String, Object> response = new HashMap<>();
         if (optionalWord.isPresent()) {
             Words word = optionalWord.get();
-            boolean correct = word.getTranslatedWord().equalsIgnoreCase(request.getUserWord().trim());
+            PracticeDirection direction = Optional.ofNullable(request.getDirection())
+                    .orElse(PracticeDirection.FOREIGN_TO_NATIVE);
+            String expectedAnswer = direction == PracticeDirection.FOREIGN_TO_NATIVE
+                    ? word.getTranslatedWord()
+                    : word.getForeignWord();
+            String userAnswer = Optional.ofNullable(request.getUserWord()).orElse("").trim();
+            boolean correct = expectedAnswer.equalsIgnoreCase(userAnswer);
             response.put("correct", correct);
             if (correct) {
                 response.put("message", "Correct");
@@ -45,6 +52,7 @@ public class PracticeService {
                 Map<String, Object> details = new HashMap<>();
                 details.put("foreignWord", word.getForeignWord());
                 details.put("correctTranslation", word.getTranslatedWord());
+                details.put("expectedAnswer", expectedAnswer);
                 details.put("userAnswer", request.getUserWord());
                 response.put("details", details);
             }

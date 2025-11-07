@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface WordGroupRepository extends JpaRepository<WordGroup, Long> {
 
     Optional<WordGroup> findByName(String name);
-
-    Optional<WordGroup> findById(@NonNull Long id);
+    
+    Optional <WordGroup> findById(@NonNull Long id);
 
     List<WordGroup> findAllByOrderByIdAsc();
 

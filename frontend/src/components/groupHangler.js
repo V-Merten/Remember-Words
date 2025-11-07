@@ -185,7 +185,7 @@ export const useGroups = () => {
       console.log('Word added to group successfully');
 
       if (!expandedGroups.includes(groupId)) {
-        await handleSelectGroup(groupId); // раскрыть и обновить
+        await handleSelectGroup(groupId);
       } else {
         const updatedWords = await getWordsByGroup(groupId);
         setGroupWordsMap(prev => ({

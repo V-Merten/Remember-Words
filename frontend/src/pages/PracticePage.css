@@ -19,7 +19,29 @@
     font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
     font-weight: 500;
     margin-bottom: 20px;
-    text-align: center
+    display: flex;
+    align-items: center;
+  }
+
+  .direction-toggle {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .direction-toggle button {
+    padding: 6px 14px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .direction-toggle button.active {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
   }
   
   .input-translation {
