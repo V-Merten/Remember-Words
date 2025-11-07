@@ -5,7 +5,7 @@
 ## Features
 
 - Add and translate new words
-- Organize words into custom groups
+- Organise words into custom groups
 - Rename and delete words or groups
 - Practice mode: test your memory
 - Desktop interface powered by Electron
@@ -18,7 +18,3 @@
 - **Backend:** Spring Boot (Java)
 - **Database:** H2 (in-memory / file-based)
 - **Build Tools:** Maven, npm, Electron Builder
-
-  
-
-Download Link - https://github.com/V-Merten/Remember-Words/releases
