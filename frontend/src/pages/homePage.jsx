@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom'
 import { useWordsFunctions } from '../components/wordsHandle.js';
 import { useGroups } from '../components/groupHangler.js';
@@ -44,6 +44,11 @@ const HomePage = () => {
     handleAddWordToGroup,
     fetchGroupWords,
   } = useGroups();
+
+  const sortedWords = useMemo(
+    () => [...words].sort((a, b) => (Number(b?.id) || 0) - (Number(a?.id) || 0)),
+    [words]
+  );
 
   return (
     <div className="page-container">
@@ -104,14 +109,14 @@ const HomePage = () => {
                   <input
                     type="checkbox"
                     checked={allSelected}
-                    onChange={() => toggleSelectAllWords(words, selectedWords, setSelectedWords, setAllSelected)}
+                    onChange={() => toggleSelectAllWords(sortedWords, selectedWords, setSelectedWords, setAllSelected)}
                     title="Select all"
                   />
                 </th>
               </tr>
             </thead>
             <tbody>
-              {words.map((word, index) => (
+              {sortedWords.map((word, index) => (
                 <tr key={index}>
                   <td>{word.foreignWord}</td>
                   <td>{word.translatedWord}</td>
